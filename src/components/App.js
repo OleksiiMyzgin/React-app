@@ -4,7 +4,8 @@ import Order from "./Order";
 import Inventory from "./Inventory";
 import Fish from "./Fish";
 import sampleFishes from "../sample-fishes";
-import base from '../base';
+import base from "../base";
+import PropTypes from "prop-types";
 
 class App extends React.Component {
   constructor() {
@@ -28,13 +29,15 @@ class App extends React.Component {
     // this runt right before the <App> is rendered
     this.ref = base.syncState(`${this.props.match.params.storeId}/fishes`, {
       context: this,
-      state: 'fishes'
+      state: "fishes"
     });
 
     // check if there is any order in licalStorage
-    const localStorageRef = localStorage.getItem(`order-${this.props.match.params.storeId}`);
+    const localStorageRef = localStorage.getItem(
+      `order-${this.props.match.params.storeId}`
+    );
 
-    if(localStorageRef) {
+    if (localStorageRef) {
       // update our App component's order state
       this.setState({
         order: JSON.parse(localStorageRef)
@@ -47,7 +50,10 @@ class App extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    localStorage.setItem(`order-${this.props.match.params.storeId}`, JSON.stringify(nextState.order));
+    localStorage.setItem(
+      `order-${this.props.match.params.storeId}`,
+      JSON.stringify(nextState.order)
+    );
   }
 
   addFish(fish) {
@@ -61,13 +67,13 @@ class App extends React.Component {
   }
 
   updateFish(key, updatedFish) {
-    const fishes = {...this.state.fishes};
+    const fishes = { ...this.state.fishes };
     fishes[key] = updatedFish;
     this.setState({ fishes });
   }
 
   removeFish(key) {
-    const fishes = {...this.state.fishes};
+    const fishes = { ...this.state.fishes };
     fishes[key] = null;
     this.setState({ fishes });
   }
@@ -88,7 +94,7 @@ class App extends React.Component {
   }
 
   removeFromOrder(key) {
-    const order = {...this.state.order};
+    const order = { ...this.state.order };
     delete order[key];
     this.setState({ order });
   }
@@ -110,21 +116,25 @@ class App extends React.Component {
           </ul>
         </div>
         <Order
-              fishes={this.state.fishes}
-              order={this.state.order}
-              params={this.props.match.params}
-              removeFromOrder={this.removeFromOrder}
+          fishes={this.state.fishes}
+          order={this.state.order}
+          params={this.props.match.params}
+          removeFromOrder={this.removeFromOrder}
         />
         <Inventory
-              addFish={this.addFish}
-              removeFish={this.removeFish}
-              loadSamples={this.loadSamples}
-              fishes={this.state.fishes}
-              updateFish={this.updateFish}
+          addFish={this.addFish}
+          removeFish={this.removeFish}
+          loadSamples={this.loadSamples}
+          fishes={this.state.fishes}
+          updateFish={this.updateFish}
         />
       </div>
     );
   }
+}
+
+App.propTypes = {
+  match: PropTypes.object.isRequired
 }
 
 export default App;
